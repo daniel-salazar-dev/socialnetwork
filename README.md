@@ -5,3 +5,10 @@ This started as a homework assignment for a course at the University of Washingt
 # Files
 
 accounts.csv and status_updates.csv can be used to test the import process
+
+# Tips
+
+If you'd like to drop all of the tables in your current database from the terminal you can run the following in a Python shell (I prefer IPython):
+1. import database_manager
+2. run database_utils
+3. drop_tables(database_manager.db)
