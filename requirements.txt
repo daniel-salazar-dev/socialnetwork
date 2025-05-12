@@ -1,0 +1,6 @@
+loguru
+coverage
+pylint
+black
+pytest
+peewee
