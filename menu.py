@@ -18,6 +18,27 @@ status_collection = main.init_status_collection()
 # Register close_db to be called when program exits to prevent hanging database connections
 atexit.register(lambda: dbm.close_db(active_database))
 
+# Use dictionary to store/enforce max column lengths
+MAX_LENGTHS = {
+    "User ID": 30,
+    "User email": 1000,
+    "User name": 30,
+    "User last name": 100,
+    "Status text": 1000,
+}
+
+
+# Use helper function to standardize user input checks
+def _get_input(prompt, field_name):
+    while True:
+        value = input(prompt).strip()
+        if len(value) > MAX_LENGTHS[field_name]:
+            print(
+                f"{field_name} can't be longer than {MAX_LENGTHS[field_name]} characters."
+            )
+        else:
+            return value
+
 
 def load_users():
     """
@@ -55,10 +76,10 @@ def add_user():
     """
     Adds a new user record to the database
     """
-    user_id = input("\nUser ID: ").strip()
-    email = input("User email: ").strip()
-    user_name = input("User name: ").strip()
-    user_last_name = input("User last name: ").strip()
+    user_id = _get_input("\nUser ID: ", "User ID")
+    email = _get_input("User email: ", "User email")
+    user_name = _get_input("User name: ", "User name")
+    user_last_name = _get_input("User last name: ", "User last name")
     if not main.add_user(user_id, email, user_name, user_last_name, user_collection):
         print("\nAn error occurred while trying to add new user")
     else:
@@ -69,10 +90,10 @@ def update_user():
     """
     Updates an existing user record in the database
     """
-    user_id = input("\nUser ID: ").strip()
-    email = input("User email: ").strip()
-    user_name = input("User name: ").strip()
-    user_last_name = input("User last name: ").strip()
+    user_id = _get_input("\nUser ID: ", "User ID")
+    email = _get_input("User email: ", "User email")
+    user_name = _get_input("User name: ", "User name")
+    user_last_name = _get_input("User last name: ", "User last name")
     if not main.update_user(user_id, email, user_name, user_last_name, user_collection):
         print("An error occurred while trying to update user")
     else:
@@ -141,9 +162,9 @@ def add_status():
     """
     Adds a new user status record to the database
     """
-    user_id = input("\nUser ID: ").strip()
+    user_id = _get_input("\nUser ID: ", "User ID")
     status_id = input("Status ID: ").strip()
-    status_text = input("Status text: ").strip()
+    status_text = _get_input("Status text: ", "Status text")
     if not main.add_status(
         status_id, user_id, status_text, status_collection, user_collection
     ):
@@ -156,8 +177,8 @@ def update_status():
     """
     Updates an existing user status record in the database
     """
-    status_id = input("\nStatus ID: ").strip()
-    status_text = input("Status text: ").strip()
+    status_id = input("Status ID: ").strip()
+    status_text = _get_input("Status text: ", "Status text")
     if not main.update_status(status_id, status_text, status_collection):
         print("An error occurred while trying to update status")
     else:
